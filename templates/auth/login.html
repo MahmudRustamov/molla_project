@@ -1,13 +1,22 @@
 {% extends 'layout/base.html' %}
 {% load static %}
-{% block title %}Register{% endblock %}
+{% block title %}
+    {% if "accounts/register" in request.path %}
+        Register
+    {% elif "accounts/login" in request.path %}
+        Login
+    {% else %}
+        My Site
+    {% endif %}
+{% endblock %}
+
 {% block content %}
      <main class="main">
             <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'pages:home' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'products:list' %}">Products</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Login</li>
                     </ol>
                 </div><!-- End .container -->
@@ -17,21 +26,31 @@
             	<div class="container">
             		<div class="form-box">
             			<div class="form-tab">
-	            			<ul class="nav nav-pills nav-fill" role="tablist">
-							    <li class="nav-item">
-							        <a class="nav-link" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
+							<ul class="nav nav-pills nav-fill" role="tablist">
+								{% url 'accounts:register' as register_url %}
+								{% url 'accounts:login' as login_url %}
+								<li class="nav-item">
+							        <a class="nav-link {% if request.path == login_url %}active{% endif %}" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
 							    </li>
 							    <li class="nav-item">
-							        <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
+							        <a class="nav-link {% if request.path == register_url %}active{% endif %}" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
 							    </li>
 							</ul>
 							<div class="tab-content">
-							    <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
-							    	<form action="{% url 'pages:about' %}" method="POST">
+							    <div class="tab-pane fade {% if request.path == login_url %}show active{% endif %}" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
+							    	<form action="{% url 'accounts:login' %}" method="POST">
                                         {% csrf_token %}
+										{% if messages %}
+											{% for message in messages %}
+												{% if message.tags == "error" %}
+                                                	<h3 style="color: Red">Errors: </h3>
+                                               		<li>{{ message }}</li>
+												{% endif %}
+                                            {% endfor %}
+                                        {% endif %}
 							    		<div class="form-group">
 							    			<label for="singin-email-2">Username or email address *</label>
-							    			<input type="text" class="form-control" id="singin-email-2" name="email" required>
+							    			<input type="text" class="form-control" id="singin-email-2" name="username" required>
 							    		</div><!-- End .form-group -->
 
 							    		<div class="form-group">
@@ -71,14 +90,16 @@
 								    	</div><!-- End .row -->
 							    	</div><!-- End .form-choice -->
 							    </div><!-- .End .tab-pane -->
-							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+							    <div class="tab-pane fade {% if request.path == register_url %}show active{% endif %}" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
 							    	<form action="{% url 'accounts:register' %}" method="POST">
                                         {% csrf_token %}
                                         <ul>
                                             {% if messages %}
-                                                <h3 style="color: Red">Errors: </h3>
-                                                {% for message in messages %}
-                                                <li>{{ message }}</li>
+												{% for message in messages %}
+													{% if message.tags == "error" %}
+                                                	<h3 style="color: Red">Errors: </h3>
+                                                	<li>{{ message }}</li>
+													{% endif %}
                                                 {% endfor %}
                                             {% endif %}
                                         </ul>

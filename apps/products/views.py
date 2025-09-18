@@ -1,41 +1,51 @@
 from django.shortcuts import render
-
 from apps.products.models import ProductCategory, ProductModel, ProductSize, ProductColor, ProductBrand
+from django.views.generic import ListView, DetailView
 
 
-def products_list_view(request):
-    categories = ProductCategory.objects.all()
-    brands = ProductBrand.objects.all()
-    colors = ProductColor.objects.all()
-    sizes = ProductSize.objects.all()
-    products = ProductModel.objects.all()
+class ProductListView(ListView):
+    pass
+    model = 'ProductModel'
+    template_name = 'products/products.html'
+    context_object_name = 'products'
 
-    cat_id = request.GET.get('cat')
-    brand_id = request.GET.get('brand_id')
-    color_id = request.GET.get('color_id')
-    size_id = request.GET.get('size_id')
-    q = request.GET.get('q')
+    def get_queryset(self):
+        pass
 
-    if cat_id:
-        products = products.filter(categories=cat_id)
 
-    if brand_id:
-        products = products.filter(brand=brand_id)
+    def products_list_view(request):
+        categories = ProductCategory.objects.all()
+        brands = ProductBrand.objects.all()
+        colors = ProductColor.objects.all()
+        sizes = ProductSize.objects.all()
+        products = ProductModel.objects.all()
 
-    if color_id:
-        products = products.filter(products_quantity__color=color_id)
+        cat_id = request.GET.get('cat')
+        brand_id = request.GET.get('brand_id')
+        color_id = request.GET.get('color_id')
+        size_id = request.GET.get('size_id')
+        q = request.GET.get('q')
 
-    if size_id:
-        products = products.filter(products_quantity__size=size_id)
+        if cat_id:
+            products = products.filter(categories=cat_id)
 
-    if q:
-        products = products.filter(title__icontains=q)
+        if brand_id:
+            products = products.filter(brand=brand_id)
 
-    context = {
-        "categories": categories,
-        "brands": brands,
-        "colors": colors,
-        "sizes": sizes,
-        "products": products,
-    }
-    return render(request, 'products/products.html', context)
+        if color_id:
+            products = products.filter(products_quantity__color=color_id)
+
+        if size_id:
+            products = products.filter(products_quantity__size=size_id)
+
+        if q:
+            products = products.filter(title__icontains=q)
+
+        context = {
+            "categories": categories,
+            "brands": brands,
+            "colors": colors,
+            "sizes": sizes,
+            "products": products,
+        }
+        return render(request, 'products/products.html', context)

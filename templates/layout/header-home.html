@@ -1,4 +1,13 @@
 {% load static %}
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'success' %}
+    <div style="text-align: center;" class="alert alert-primary" role="alert">
+        {{ message }}
+    </div>
+{% endif %}
+{% endfor %}
+{% endif %}
 <header class="header header-2 header-intro-clearance">
             <div class="header-top">
                 <div class="container">
