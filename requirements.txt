@@ -4,6 +4,10 @@ django-ckeditor==6.7.3
 django-extensions==4.1
 django-js-asset==3.1.2
 django-modeltranslation==0.19.16
+dotenv==0.9.9
 pillow==11.3.0
+python-decouple==3.8
+python-dotenv==1.1.1
 pytz==2025.2
+six==1.17.0
 sqlparse==0.5.3

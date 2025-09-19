@@ -1,6 +1,8 @@
 import threading
+
 from django.db.models import Count
 from django.views.generic import ListView, DetailView
+
 from apps.blogs.models import BlogModel, BlogCategoryModel, BlogTagModel
 from apps.blogs.utils import check_blog_view
 
@@ -9,7 +11,9 @@ class BlogListView(ListView):
     template_name = 'blogs/blog-list.html'
 
     def get_queryset(self):
-        pass
+        return BlogModel.objects.filter(
+            status=BlogModel.BlogStatus.PUBLISHED
+        )
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
